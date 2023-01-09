@@ -1,6 +1,6 @@
 import { UpdateFaceData } from '$db/database';
 import { client } from '$db/redis';
-import sharp from 'sharp';
+import Jimp from 'jimp/es';
 
 // Decode properties from a list of properties
 export function DecodeProperties(properties: { name: string; value: string }[]) {
@@ -29,12 +29,11 @@ export async function ExtractFace(property: { name: string; value: string }) {
 		const buffer = await FetchSkin(url);
 		if (!buffer) return null;
 
-		const base = (await sharp(buffer).extract({ width: 8, height: 8, left: 8, top: 8 }).toBuffer()).toString(
-			'base64'
-		);
-		const overlay = (await sharp(buffer).extract({ width: 8, height: 8, left: 40, top: 8 }).toBuffer()).toString(
-			'base64'
-		);
+		const basePNG = await (await Jimp.read(buffer)).crop(8, 8, 8, 8).getBase64Async(Jimp.MIME_PNG);
+		const overlayPNG = await (await Jimp.read(buffer)).crop(40, 8, 8, 8).getBase64Async(Jimp.MIME_PNG);
+
+		const base = basePNG.split(',')[1];
+		const overlay = overlayPNG.split(',')[1];
 
 		void UpdateFaceData(textures.profileId, { base, overlay });
 		await client.SET(`face:${textures.profileId}`, `${base}:${overlay}`);
