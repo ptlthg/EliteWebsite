@@ -17,6 +17,7 @@
 
 	import type { PageData } from './$types';
 	import { PUBLIC_HOST_URL } from '$env/static/public';
+	import Pets from '$comp/stats/pets.svelte';
 	export let data: PageData;
 
 	const account = data.account;
@@ -109,20 +110,27 @@
 		</div>
 	{/if}
 
-	<Collections {collections} ranks={data.rankings.crops} />
+	<section class="flex flex-col xl:flex-row gap-8 xl:mx-8 justify-center">
+		<div class="flex-1">
+			<Collections {collections} ranks={data.rankings.crops} />
+		</div>
+		<div class="flex-1">
+			<Pets pets={profile.member.pets} />
+		</div>
+	</section>
 
 	<JacobInfo jacob={profile.member.jacob} ign={account.name} />
 
 	<Breakdown weight={data.weight?.farming} />
-</main>
 
-<h1 class="text-center text-md m-16 flex flex-col">
-	<span>
-		<span class="select-none text-gray-500">Player UUID:</span>
-		{uuid}
-	</span>
-	<span>
-		<span class="select-none text-gray-500">Last Loaded:</span>
-		{new Date(data.last_fetched).toLocaleString()}
-	</span>
-</h1>
+	<h1 class="text-center text-md m-16 flex flex-col">
+		<span>
+			<span class="select-none text-gray-500">Player UUID:</span>
+			{uuid}
+		</span>
+		<span>
+			<span class="select-none text-gray-500">Last Loaded:</span>
+			{new Date(data.last_fetched).toLocaleString()}
+		</span>
+	</h1>
+</main>
