@@ -88,9 +88,23 @@ export interface ProfileMember {
 	minions: CraftedMinions;
 	jacob: JacobData;
 	fairy: FairyData;
+	pets: PetList;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[key: string]: any;
 }
+
+export type RartityTiers = 'COMMON' | 'UNCOMMON' | 'RARE' | 'EPIC' | 'LEGENDARY' | 'MYTHIC' | 'SPECIAL' | 'VERY SPECIAL';
+
+export type PetList = {
+	exp: number,
+	skin: null | string,
+	tier: Omit<RartityTiers, 'SPECIAL' | 'VERY SPECIAL'>,
+	type: string,
+	uuid: null | string,
+	active: boolean,
+	heldItem: null | string,
+	candyUsed: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
+}[];
 
 export type SkillName =
 	| 'alchemy'
